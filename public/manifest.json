@@ -1,7 +1,7 @@
 {
   "name": "Crossword Helper",
   "short_name": "Crossword Helper",
-  "description": "A simple Crossword tool that helps you find all the words that match the words you have",
+  "description": "Crossword and Codeword helper. Helps you find all the words that match the letters you have.",
   "icons": [
     {
       "sizes": "192x192",
