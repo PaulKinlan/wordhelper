@@ -4,6 +4,10 @@ import { readFileSync, appendFileSync } from 'fs';
 const jsonString = readFileSync('./api/words_dictionary.json')
 const words = JSON.parse(jsonString);
 
+console.time("Custom .");
+  console.log([...find('l..k', words)]);
+console.timeEnd("Custom .");
+
 console.time("Custom");
   find('_a___ing', words);
 console.timeEnd("Custom");
