@@ -102,29 +102,34 @@
       navigator.share({ title: `Crossword Helper: ${pattern.value}`, url: window.location })
     };
 
-    const submit = async (event) => {
-      event.preventDefault();
-
-      const pattern = document.getElementById('pattern');
+    const search = () => {
       const submit = document.getElementById('submit');
       const results = document.getElementById('results');
 
-      const patternVal = pattern.value;
-
       const prevValue = submit.value;
+
       submit.value = '⏳';
       submit.classList.add('waiting');
-      results.classList.add('available');
 
       fetch(`/api/find.js?pattern=${encodeURIComponent(patternVal)}`)
         .then(r => r.json())
         .then(updateUI)
         .then(_ => {
+          results.classList.add('available');
           submit.classList.remove('waiting')
           submit.value = prevValue;
         })
-      // Update the URL.
-      history.pushState(undefined, `C(ross|ode)word Helper: ${patternVal}`, `/find/${patternVal}`)
+    }
+
+    const submit = async (event) => {
+      event.preventDefault();
+
+      const pattern = document.getElementById('pattern');
+      const patternVal = pattern.value;
+
+      search(patternVal);
+      
+      history.pushState(patternVal, `C(ross|ode)word Helper: ${patternVal}`, `/find/${patternVal}`)
     };
 
     addEventListener('load', () => {
@@ -137,6 +142,15 @@
       if ('share' in navigator === false) {
         shareBtn.style.display = 'none';
       }
+    });
+
+    addEventListener('popstate', (event) => {
+      const pattern = event.state;
+      
+      const results = document.getElementById('results');
+      results.classList.remove('available');
+
+      search(pattern);
     });
 
     if ('serviceWorker' in navigator) {
