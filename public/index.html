@@ -102,7 +102,7 @@
       navigator.share({ title: `Crossword Helper: ${pattern.value}`, url: window.location })
     };
 
-    const search = () => {
+    const search = (pattern) => {
       const submit = document.getElementById('submit');
       const results = document.getElementById('results');
 
@@ -111,7 +111,7 @@
       submit.value = '⏳';
       submit.classList.add('waiting');
 
-      fetch(`/api/find.js?pattern=${encodeURIComponent(patternVal)}`)
+      fetch(`/api/find.js?pattern=${encodeURIComponent(pattern)}`)
         .then(r => r.json())
         .then(updateUI)
         .then(_ => {
