@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width">
+  <title>C(ross|ode)word Helper</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="twitter:title" content="Crossword and Codeword Helper">
+  <meta name="twitter:description"
+    content="Crossword and Codeword helper. Helps you find all the words that match the letters you have.">
+  <meta name="twitter:site" content="@paul_kinlan">
+  <meta name="twitter:creator" content="@paul_kinlan">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/images/codeword-twitter.jpg">
+  <meta property="og:title" content="C(ross|ode)word Helper" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://wordhelper.app/" />
+  <meta property="og:image" content="https://wordhelper.app/images/codeword-twitter.jpg" />
+
+  <meta name="description"
+    content="A Crossword and Codeword helper. Helps you find all the words that match the letters you have.">
+  <link rel="icon" type="image/png" href="/images/codeword-small.jpg">
+  <style>
+    h1 {
+      font-family: monospace;
+      text-align: center;
+    }
+
+    h1 a,
+    h1 a:visited {
+      color: black;
+    }
+
+    input[type=text] {
+      font-family: monospace;
+      width: 100%;
+      font-size: 2em;
+      display: block;
+      width: 90%;
+      height: 100%;
+      box-sizing: border-box;
+      max-width: 90%;
+      border: solid 1px black;
+      background-color: white;
+      border-right: none;
+    }
+
+    input[type=submit],
+    #share {
+      font-family: monospace;
+      font-size: 2em;
+      display: block;
+      height: 100%;
+      border: 1px solid black;
+      box-sizing: border-box;
+      border-left: none;
+      color: white;
+      background: black;
+      min-width: 4em;
+    }
+
+    #share {
+      height: initial;
+    }
+
+    input[type=submit].waiting {
+      color: transparent;
+      text-shadow: white 0 0 0;
+    }
+
+    #query {
+      display: flex;
+      height: 3em;
+      padding: 1em;
+    }
+
+    #results {
+      display: none;
+    }
+
+    #results.available {
+      display: block;
+    }
+  </style>
+  <script>
+    const updateUI = (matches) => {
+      const results = document.getElementById('results');
+      const list = document.getElementById('list');
+
+      list.innerHTML = '';
+
+      for (let match of matches) {
+        const item = document.createElement('li');
+        item.innerText = match;
+        list.appendChild(item);
+      }
+
+      results.classList.add('available');
+    };
+
+    const share = async (event) => {
+      const pattern = document.getElementById('pattern');
+      navigator.share({ title: `Crossword Helper: ${pattern.value}`, url: window.location })
+    };
+
+    const submit = async (event) => {
+      event.preventDefault();
+
+      const pattern = document.getElementById('pattern');
+      const submit = document.getElementById('submit');
+      const results = document.getElementById('results');
+
+      const patternVal = pattern.value;
+
+      const prevValue = submit.value;
+      submit.value = '⏳';
+      submit.classList.add('waiting');
+      results.classList.add('available');
+
+      fetch(`/api/find.js?pattern=${encodeURIComponent(patternVal)}`)
+        .then(r => r.json())
+        .then(updateUI)
+        .then(_ => {
+          submit.classList.remove('waiting')
+          submit.value = prevValue;
+        })
+      // Update the URL.
+      history.pushState(undefined, `C(ross|ode)word Helper: ${patternVal}`, `/find/${patternVal}`)
+    };
+
+    addEventListener('load', () => {
+      const solver = document.getElementById('solver');
+      const shareBtn = document.getElementById('share');
+
+      solver.addEventListener('submit', submit);
+      shareBtn.addEventListener('click', share);
+
+      if ('share' in navigator === false) {
+        shareBtn.style.display = 'none';
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker registered', reg))
+        .catch(err => console.error('Service Worker **not** registered', err));
+    }
+    else {
+      console.warn('Service Worker not supported in this browser');
+    }    
+  </script>
+   <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "C(ross|ode)word Helper",
+      "applicationCategory": "https://schema.org/UtilitiesApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0"
+      },
+      "browserRequirements": "requires HTML5 support.",
+      "operatingSystem": "WEB",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1"
+      }
+    }
+    </script>
+</head>
+
+<body>
+  <h1><a href="/">C(ross|ode)word Helper</a></h1>
+  <form id="solver" method="POST" action="/find">
+    <label for="pattern">Pattern:</label>
+    <div id="query">
+      <input type="text" id="pattern" placeholder="e.g, L__K or L11K" value=""><!--[QUERY]-->
+      <input type="submit" id="submit" value="Find">
+    </div>
+    <p>Enter as much as you know of an English word. When you don't known the letter, use _ (<a href="/find/L__K">L__K</a>). If you know two
+      letters are the same us a number, e.g 1 (<a href="/find/L11K">L11K</a>).</p>
+  </form>
+  <div id="results"><!--[RESULTSAVAILABLE]-->
+    <ol id="list">
+      <!--[RESULTS]-->
+    </ol>
+    <button id="share">Share</button>
+  </div>
+</body>
+
+</html>

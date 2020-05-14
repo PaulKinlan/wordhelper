@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/find/(.*)", "destination": "/api/find-html.js?pattern=$1" }
+  ]
+}

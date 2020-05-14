@@ -1,0 +1,3 @@
+Me and my wife started to do crosswords and codewords during the COVID19 lockdown, and we're middling at best. I built this tool to help us when we get stuck.
+
+Seriously, we got stuck on _SERS ... What is an Uh-ser? Oh, crap, user.
