@@ -12,10 +12,10 @@ module.exports = (req, res) => {
   const results = [...find(pattern, dictionary)];
 
   const html = template
-      .replace(/<title>C\(ross\|ode\)word Helper<\/title>/, `<title>C(ross|ode)word Helper: ${pattern}</title>`)
-      .replace(/"><!--\[RESULTSAVAILABLE\]-->/g, `" class="available">`)
-      .replace(/"><!--\[QUERY\]-->/g, `${pattern}">`)
-      .replace(/<!--\[RESULTS\]-->/g, `<li>${results.join('</li><li>')}</li>`)
+      .replace(/<title>C\(ross\|ode\)word Helper<\/title>/, `<title>C(ross|ode)word Helper: ${pattern}</title>`);
+      .replace(/"><!--\[RESULTSAVAILABLE\]-->/g, `" class="available">`);
+      .replace(/"><!--\[QUERY\]-->/g, `${pattern}">`);
+      .replace(/<!--\[RESULTS\]-->/g, `<li>${results.join('</li><li>')}</li>`);
 
   res.status(200).send(html);
 }
