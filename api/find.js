@@ -1,9 +1,9 @@
 const find = require('../lib/find.js');
-const {readFileSync} = require('fs');
+const { readFileSync } = require('fs');
 const path = require('path');
 
 const jsonString = readFileSync(path.join(__dirname, './words_dictionary.json'));
-const template = readFileSync(path.join(__dirname, '../public/index.html'),'utf8');
+const template = readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
 const dictionary = JSON.parse(jsonString);
 
 module.exports = (req, res) => {
