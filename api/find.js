@@ -12,7 +12,7 @@ module.exports = (req, res) => {
   const results = [...find(pattern, dictionary)];
 
   if (req.headers.accept && req.headers.accept.indexOf('text/html') > -1) {
-    const blanked = pattern.replace(/_|\./, 'Blank').split('').join(' ');
+    const blanked = pattern.replace(/_|\./g, 'Blank').split('').join(' ');
     const html = template
       .replace(/<title>C\(ross\|ode\)word Helper<\/title>/, `<title>C(ross|ode)word Helper: ${pattern}</title>`)
       .replace(/"><!--\[DESCRIPTION\]-->/g, `. For example: ${blanked}">`)
