@@ -17,5 +17,6 @@ module.exports = (req, res) => {
       .replace(/"><!--\[QUERY\]-->/g, `${pattern}">`)
       .replace(/<!--\[RESULTS\]-->/g, `<li>${results.join('</li><li>')}</li>`);
 
+  res.setHeader('Cache-Control', `s-maxage=600, max-age=600`);
   res.status(200).send(html);
 }
