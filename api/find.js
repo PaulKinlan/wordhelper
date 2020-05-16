@@ -14,6 +14,7 @@ module.exports = (req, res) => {
   if (req.headers.accept && req.headers.accept.indexOf('text/html') > -1) {
     const html = template
       .replace(/<title>C\(ross\|ode\)word Helper<\/title>/, `<title>C(ross|ode)word Helper: ${pattern}</title>`)
+      .replace(/"><!--\[DESCRIPTION\]-->/g, `. For example: ${pattern.replace(/_|\./, 'Blank').split('').join(' ')}">`)
       .replace(/"><!--\[RESULTSAVAILABLE\]-->/g, `" class="available">`)
       .replace(/"><!--\[QUERY\]-->/g, `${pattern}">`)
       .replace(/<!--\[RESULTS\]-->/g, `<li>${results.join('</li><li>')}</li>`);
