@@ -89,6 +89,20 @@
     #results.available {
       display: block;
     }
+
+    #results ol {
+      display: flex;
+      font-family: monospace;
+      padding: 1em;
+      flex-flow: wrap;
+      padding-left: 3em;
+    }
+
+    #results ol li {
+      margin-right: 1em;
+      margin-top: 1em;
+      padding-right: 2em;
+    }
   </style>
   <script>
     const updateUI = (matches) => {
