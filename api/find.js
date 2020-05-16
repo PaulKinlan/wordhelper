@@ -10,5 +10,7 @@ module.exports = (req, res) => {
 
   const results = [...find(pattern, dictionary)];
 
+  // API calls can be cached because the UI won't change
+  res.setHeader('Cache-Control', `public, immutable, no-transform, s-maxage=31536000, max-age=31536000`);
   res.status(200).json(results);
 }
